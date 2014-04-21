@@ -1288,7 +1288,7 @@ public:
 	union {
             const hwc_rect_t* displayFrame;
         };	
-	displayFrame = reinterpret_cast<hwc_rect_t const&>(finalDR);
+	displayFrame = reinterpret_cast<hwc_rect_t const*>(&finalDR);
 	getLayer()->dirtyRect = *displayFrame;
     }
 #endif
