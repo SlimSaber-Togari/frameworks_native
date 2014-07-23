@@ -227,6 +227,9 @@ int Surface::dequeueBuffer(android_native_buffer_t** buffer, int* fenceFd) {
         if (result != NO_ERROR) {
             ALOGE("dequeueBuffer: IGraphicBufferProducer::requestBuffer failed: %d", result);
             return result;
+        } else if (gbuf == 0) {
+            ALOGE("dequeueBuffer: Buffer is null return");
+            return INVALID_OPERATION;
         }
     }
 
@@ -876,7 +879,9 @@ status_t Surface::lock(
 
         { // scope for the lock
             Mutex::Autolock lock(mMutex);
-            mSlots[backBufferSlot].dirtyRegion = newDirtyRegion;
+            if (backBufferSlot >= 0) {
+               mSlots[backBufferSlot].dirtyRegion = newDirtyRegion;
+            }
         }
 
         if (inOutDirtyBounds) {
